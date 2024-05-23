@@ -1,26 +1,45 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useState } from 'react';
+import FileDrop from './components/FileDrop';
 
-function App() {
+const App: React.FC = () => {
+  const [extractedText, setExtractedText] = useState<string>('');
+  const [search, setSearch] = useState<string>('');
+  const [displayedText, setDisplayedText ] = useState<string>('');
+
+  const handleTextExtracted = (text: string) => {
+    console.log('Extracted Text:', text);
+    setExtractedText(text);
+  };
+
+  useEffect(()=>setDisplayedText(extractedText),[extractedText])
+
+  const highlightWord = (text:string, word:string) => {
+    const regex = new RegExp(`\\w*${word}\\w*`, 'gi');
+    return text.replace(regex, `<U>${word}</U>`)
+  };
+
+  const handleDocSearch = () => {
+    const highlightedContent = highlightWord(extractedText, search);
+    setDisplayedText(highlightedContent)
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div style={{ padding: '20px' }}>
+      <h1>File Drop with Text Recognition</h1>
+      <FileDrop onTextExtracted={handleTextExtracted} />
+      <div style={{ padding: '20px', display: "flex" }}>
+      <input
+      onChange={(e)=>{setSearch(e.target.value)}}/>
+      <button onClick={()=>{handleDocSearch()}}> search</button>
+      </div>
+      {extractedText && (
+        <div style={{ marginTop: '20px' }}>
+          <h2>Extracted Text:</h2>
+          <pre dangerouslySetInnerHTML={{ __html: displayedText }}></pre>
+        </div>
+      )}
     </div>
   );
-}
+};
 
 export default App;
