@@ -25,7 +25,8 @@ const App: React.FC = () => {
 
   return (
     <div style={{ padding: '20px' }}>
-      <h1>File Drop with Text Recognition</h1>
+      <h1 style={{marginBottom: 0}}>File Drop with Text Recognition and Search</h1>
+      <h3 style={{fontStyle: 'italic', marginTop: "5px"}}>proof of concept</h3>
       <FileDrop onTextExtracted={handleTextExtracted} />
       <div style={{ padding: '20px', display: "flex" }}>
       <input

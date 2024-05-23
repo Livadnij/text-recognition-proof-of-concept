@@ -41,6 +41,15 @@ const FileDrop: React.FC<FileDropProps> = ({ onTextExtracted }) => {
     [onTextExtracted]
   );
 
+  const handleFileInputChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      if (e.target.files && e.target.files.length > 0) {
+        const file = e.target.files[0];
+        processFile(file);
+      }
+    },
+    [onTextExtracted]
+  );
   const processFile = (file: File) => {
     setLoading(true);
     const reader = new FileReader();
@@ -64,6 +73,13 @@ const FileDrop: React.FC<FileDropProps> = ({ onTextExtracted }) => {
     reader.readAsDataURL(file);
   };
 
+  const handleSelectFileClick = () => {
+    const fileInput = document.querySelector<HTMLInputElement>('input[type="file"]');
+    if (fileInput) {
+      fileInput.click();
+    }
+  };
+
   return (
     <div
       onDragEnter={handleDragEnter}
@@ -80,6 +96,8 @@ const FileDrop: React.FC<FileDropProps> = ({ onTextExtracted }) => {
       }}
     >
       {loading ? 'Processing...' : (dragging ? 'Drop the files here...' : 'Drag & drop files here, or click to select files')}
+      <input type="file" accept="image/*" style={{ display: 'none' }} onChange={handleFileInputChange} />
+      <button style={{display: loading?"none":""}} onClick={handleSelectFileClick}>Select File</button>
     </div>
   );
 };
